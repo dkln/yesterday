@@ -1,4 +1,5 @@
 require 'yesterday/historical_item'
+require 'yesterday/historical_value'
 
 module Yesterday
   class Deserializer < Struct.new(:diff)
@@ -18,12 +19,13 @@ module Yesterday
             attributes[attribute] ||= []
             attributes[attribute] << deserialize(item)
           end
-        else
-          attributes[attribute] = value
+
+        elsif attribute != 'id'
+          attributes[attribute] = Yesterday::HistoricalValue.new(value)
         end
       end
 
-      Yesterday::HistoricalItem.new(attributes)
+      Yesterday::HistoricalItem.new(attributes.merge({ 'id' => diff['id']}))
     end
 
   end
