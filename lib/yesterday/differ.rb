@@ -52,41 +52,27 @@ module Yesterday
     end
 
     def diff_created_objects(from, to)
-      diff = {}
-
-      to.each do |attribute, new_objects|
-        if new_objects.is_a? Array
-          old_objects = from[attribute]
-
-          new_objects.each do |new_object|
-            old_object = find_object(old_objects, new_object['id'])
-
-            unless old_object
-              diff["created_#{attribute}"] ||= []
-              diff["created_#{attribute}"] << new_object
-            end
-          end
-        end
-      end
-
-      diff
+      diff_object_creation from, to, 'created'
     end
 
     def diff_destroyed_objects(from, to)
+      diff_object_creation to, from, 'destroyed'
+    end
+
+    def diff_object_creation(from, to, event)
       diff = {}
 
-      from.each do |attribute, old_objects|
-        if old_objects.is_a? Array
-          new_objects = to[attribute]
+      to.each do |attribute, to_objects|
+        if to_objects.is_a? Array
+          from_objects = from[attribute]
 
-          old_objects.each do |old_object|
-            new_object = find_object(new_objects, old_object['id'])
+          to_objects.each do |to_object|
+            from_object = find_object(from_objects, to_object['id'])
 
-            unless new_object
-              diff["destroyed_#{attribute}"] ||= []
-              diff["destroyed_#{attribute}"] << old_object
+            unless from_object
+              diff["#{event}_#{attribute}"] ||= []
+              diff["#{event}_#{attribute}"] << to_object
             end
-
           end
         end
       end
