@@ -1,3 +1,5 @@
 = Yesterday
 
 The Yesterday gem lets you track changes made in ActiveRecord models. It's also possible to diff different versions.
+
+Work in progress
