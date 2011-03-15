@@ -18,7 +18,7 @@ module Yesterday
           end
 
         elsif attribute != 'id'
-          attributes[attribute] = Yesterday::HistoricalValue.new(value)
+          attributes[attribute] = value.is_a?(Array) ? Yesterday::HistoricalValue.new(value) : value
         end
       end
 

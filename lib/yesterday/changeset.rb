@@ -6,6 +6,10 @@ module Yesterday
 
     serialize :object_attributes
 
+    def self.version(version_number)
+      where(:version_number => version_number)
+    end
+
     def self.for_changed_object(object)
       where(:changed_object_type => object.class.to_s, :changed_object_id => object.id)
     end
@@ -16,6 +20,10 @@ module Yesterday
 
     def self.version_number_for(object)
       last_for(object).try(:version_number) || 0
+    end
+
+    def object
+      HashToObject.new(object_attributes).to_object if object_attributes.present?
     end
 
     private
