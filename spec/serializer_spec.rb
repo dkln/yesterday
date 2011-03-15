@@ -54,4 +54,13 @@ describe Yesterday::Serializer do
       ]
     }
   end
+
+  it 'should not serialize every attribute or association if exclude_tracking_for is used' do
+    company = Company.create :name => 'foobar'
+
+    Yesterday::Serializer.new(company).to_hash.should == {
+      'id' => company.id,
+      'name' => 'foobar'
+    }
+  end
 end

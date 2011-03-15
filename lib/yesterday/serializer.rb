@@ -9,7 +9,7 @@ module Yesterday
 
     def hash_object(object)
       hash = {}
-      hash.merge! object.attributes
+      hash.merge! attributes_for(object)
 
       each_association_collection(object) do |association, association_name, item|
         path << object
@@ -45,11 +45,25 @@ module Yesterday
       end
     end
 
+    def attributes_for(object)
+      attributes = object.attributes.dup
+
+      if object.class.respond_to?(:tracked_attributes) && object.class.tracked_attributes.present?
+        attributes.except!(*(attributes.keys - object.class.tracked_attributes))
+      end
+
+      if object.class.respond_to?(:excluded_tracked_attributes) && object.class.excluded_tracked_attributes.present?
+        attributes.except!(*object.class.excluded_tracked_attributes)
+      end
+
+      attributes
+    end
+
     def associations_for(object)
       associations = object.class.reflect_on_all_associations
 
       tracked_associations = object.class.respond_to?(:tracked_associations) ? object.class.tracked_associations : []
-      ignored_associations = object.class.respond_to?(:not_tracked_associations) ? object.class.not_tracked_associations : []
+      ignored_associations = object.class.respond_to?(:excluded_tracked_associations) ? object.class.excluded_tracked_associations : []
 
       associations.select do |association|
         ( !ignored_associations.include?(association.name.to_s) &&

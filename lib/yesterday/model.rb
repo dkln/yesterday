@@ -6,15 +6,15 @@ module Yesterday
     end
 
     module ClassMethods
-      def ignore_tracking_for(options)
+      def exclude_tracking_for(options)
         if options[:associations]
-          @not_tracked_associations ||= []
-          @not_tracked_associations += Array(options[:associations]).map(&:to_s)
+          @excluded_tracked_associations ||= []
+          @excluded_tracked_associations += Array(options[:associations]).map(&:to_s)
         end
 
         if options[:attributes]
-          @not_tracked_attributes ||= []
-          @not_tracked_attributes += Array(options[:attributes]).map(&:to_s)
+          @excluded_tracked_attributes ||= []
+          @excluded_tracked_attributes += Array(options[:attributes]).map(&:to_s)
         end
       end
 
@@ -30,12 +30,12 @@ module Yesterday
         end
       end
 
-      def not_tracked_associations
-        @not_tracked_associations || []
+      def excluded_tracked_associations
+        @excluded_tracked_associations || []
       end
 
-      def not_tracked_attributes
-        @not_tracked_attributes || []
+      def excluded_tracked_attributes
+        @excluded_tracked_attributes || []
       end
 
       def tracked_associations
@@ -50,7 +50,7 @@ module Yesterday
         send :include, InstanceMethods
 
         after_save :serialize_current_state
-        ignore_tracking_for :associations => :changesets
+        exclude_tracking_for :associations => :changesets
       end
 
       def version(version_number)
