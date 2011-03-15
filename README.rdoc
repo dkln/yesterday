@@ -48,6 +48,37 @@ Both of the above examples will return a Yesterday::VersionedObject
   puts contact.version(1).first_name # -> foo
   puts contact.version(2).first_name # -> baz
 
+== Diffing two versions
+
+Use version numbers two compare two versions:
+  contact = Contact.create :first_name => 'foo'
+  contact.update_attribute :first_name => 'baz'
+
+  diff = contact.diff_version(1, 2)
+  puts diff.first_name.current # -> baz
+  puts diff.first_name.previous # -> foo
+
+Diff's within associations:
+  address = [Address.new(:address => 'blah')]
+
+  contact = Contact.new :first_name => 'foo'
+  contact.addresses = [address]
+  contact.save!
+
+  contact.addresses.first.address = 'blahblah'
+  contact.save!
+
+  diff = contact.diff_version(1, 2)
+  puts diff.addresses.first.address.current # -> blahblah
+  puts diff.addresses.first.address.previous # -> foo
+
+
+To check if associations are created, just use the created_ prefix before the appropiate association:
+  contact.created_addresses
+
+Or, for removed associations:
+  contact.destroyed_addresses
+
 
 = License and credits
 Use it and have fun with it! Comments, cakes and hugs are welcome! Just stick to the license!
