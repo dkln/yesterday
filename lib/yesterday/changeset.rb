@@ -2,7 +2,7 @@ module Yesterday
   class Changeset < ActiveRecord::Base
 
     before_create :determine_version_number, :determine_object_attributes
-    belongs_to :changed_object
+    belongs_to :changed_object, :polymorphic => true
 
     serialize :object_attributes
 
@@ -21,7 +21,7 @@ module Yesterday
     private
 
     def determine_version_number
-      self.version_number = version_number_for(changed_object) + 1
+      self.version_number = self.class.version_number_for(changed_object) + 1
     end
 
     def determine_object_attributes

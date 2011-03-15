@@ -14,6 +14,8 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string    'zipcode'
     t.string    'city'
     t.string    'country'
+    t.datetime  'created_at'
+    t.datetime  'updated_at'
   end
 
   create_table 'addresses_contacts', :id => false, :force => true do |t|
@@ -25,6 +27,9 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer   'changed_object_id'
     t.string    'changed_object_type'
     t.text      'object_attributes'
+    t.integer   'version_number'
+    t.datetime  'created_at'
+    t.datetime  'updated_at'
   end
 
 end

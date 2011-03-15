@@ -3,3 +3,6 @@
 The Yesterday gem lets you track changes made in ActiveRecord models. It's also possible to diff different versions.
 
 Work in progress
+
+In the meanwhile:
+http://www.youtube.com/watch?v=YgtByWlBSdA
