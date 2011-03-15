@@ -66,7 +66,7 @@ module Yesterday
 
       to.each do |attribute, to_objects|
         if to_objects.is_a? Array
-          from_objects = from[attribute]
+          from_objects = from[attribute] || []
 
           to_objects.each do |to_object|
             from_object = find_object(from_objects, to_object['id'])

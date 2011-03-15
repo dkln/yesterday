@@ -109,6 +109,74 @@ describe Yesterday::Model do
       diff.last_name.current.should == 'foo'
       diff.last_name.previous.should == 'bar'
     end
+
+    it 'should detect that new associations are created' do
+      contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
+
+      contact.version_number.should == 1
+
+      address1 = Address.create(
+        :street => 'street',
+        :house_number => 1,
+        :zipcode => '1234AA',
+        :city => 'Armadillo',
+        :country => 'FooCountry'
+      )
+
+      address2 = Address.create(
+        :street => 'lane',
+        :house_number => 1337,
+        :zipcode => '2211AB',
+        :city => 'Cougar town',
+        :country => 'BarCountry'
+      )
+
+      contact.addresses = [address1, address2]
+      contact.save!
+
+      contact.version_number.should == 2
+
+      diff = contact.diff_version(1, 2)
+      diff.created_addresses.count.should == 2
+      diff.created_addresses.first.id.should == address1.id
+      diff.created_addresses.last.id.should ==  address2.id
+    end
+
+    it 'should detect that associations are destroyed' do
+      contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
+
+      address1 = Address.create(
+        :street => 'street',
+        :house_number => 1,
+        :zipcode => '1234AA',
+        :city => 'Armadillo',
+        :country => 'FooCountry'
+      )
+
+      address2 = Address.create(
+        :street => 'lane',
+        :house_number => 1337,
+        :zipcode => '2211AB',
+        :city => 'Cougar town',
+        :country => 'BarCountry'
+      )
+
+      contact.addresses = [address1, address2]
+      contact.save!
+
+      contact.addresses = [address1]
+      address2.destroy
+
+      contact.save!
+
+      contact.version_number.should == 3
+
+      diff = contact.diff_version(2, 3)
+      diff.destroyed_addresses.count.should == 1
+
+      diff.destroyed_addresses.first.id.should == address2.id
+      diff.addresses.first.id.should == address1.id
+    end
   end
 
 end
