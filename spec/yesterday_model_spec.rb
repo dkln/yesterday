@@ -94,6 +94,21 @@ describe Yesterday::Model do
       diff.last_name.current.should == 'do'
       diff.last_name.previous.should == 'bar'
     end
+
+    it 'should diff version 1 with version 3' do
+      contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
+      contact.update_attributes :first_name => 'john', :last_name => 'do'
+      contact.update_attributes :first_name => 'edward', :last_name => 'foo'
+
+      diff = contact.diff_version(1, 3)
+      diff.should be_a(Yesterday::VersionedObject)
+
+      diff.first_name.current.should == 'edward'
+      diff.first_name.previous.should == 'foo'
+
+      diff.last_name.current.should == 'foo'
+      diff.last_name.previous.should == 'bar'
+    end
   end
 
 end
