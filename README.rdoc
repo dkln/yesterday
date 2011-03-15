@@ -9,7 +9,11 @@ http://www.youtube.com/watch?v=YgtByWlBSdA
 
 == Installation
 
-gem install yesterday
+Install the gem:
+  gem install yesterday
+
+And then run the generator in your Rails 3 project:
+  rails generate yesterday:install
 
 == Use tracking in your models
 
@@ -17,6 +21,33 @@ gem install yesterday
     has_many :addresses
     tracks_changes
   end
+
+  class Address < ActiveRecord::Base
+    has_many :companies
+    exclude_tracking_for :associations => :companies
+  end
+
+== Checking version number
+
+  some_contact = Contact.find(10)
+  some_contact.version_number
+
+== Viewing historical data of an object
+
+Viewing a version from an already found active record model:
+  some_contact = Contact.find(10)
+  some_contact.version(2)
+
+Or using in a scope chain:
+  Contact.where(:first_name => 'foo').last.version(3)
+
+Both of the above examples will return a Yesterday::VersionedObject
+  contact = Contact.create :first_name => 'foo'
+  contact.update_attribute :first_name => 'baz'
+
+  puts contact.version(1).first_name # -> foo
+  puts contact.version(2).first_name # -> baz
+
 
 = License and credits
 Use it and have fun with it! Comments, cakes and hugs are welcome! Just stick to the license!
