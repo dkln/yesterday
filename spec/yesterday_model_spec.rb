@@ -50,7 +50,7 @@ describe Yesterday::Model do
     it 'should return a historical item' do
       contact = Contact.create!(:first_name => 'foo', :last_name => 'bar')
       Contact.where(:id => contact.id).version(0).should == nil
-      Contact.where(:id => contact.id).version(1).should be_a(Yesterday::HistoricalItem)
+      Contact.where(:id => contact.id).version(1).should be_a(Yesterday::VersionedObject)
     end
 
     describe 'return a historical view of a version' do

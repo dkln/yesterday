@@ -55,39 +55,43 @@ module Yesterday
 
       def version(version_number)
         if object = first
-          find_version_for(version_number, object)
+          Versioning.historical_data_for(version_number, object)
         end
       end
 
-      private
-
-      def find_version_for(version_number, object)
-        Changeset.for_changed_object(object).version(version_number).first.try(:object)
+      def diff_version(from_version_number, to_version_number)
+        if object = first
+          Versioning.diff_for(from_version_number, to_version_number, object)
+        end
       end
 
     end
 
     module InstanceMethods
       def changesets
-        Changeset.for_changed_object(self)
+        Versioning.changesets_for(self)
       end
 
       def version_number
-        changesets.last.try(:version_number) || 0
+        Versioning.current_version_number_for(self)
       end
-
-      def version(version_number)
-        self.class.send(:find_version_for, version_number, self)
-      end
-
-      private
 
       def previous_version_number
         version_number > 1 ? version_number - 1 : version_number
       end
 
+      def version(version_number)
+        Versioning.historical_data_for(version_number, self)
+      end
+
+      def diff_version(from_version_number, to_version_number)
+        Versioning.diff_for(from_version_number, to_version_number, self)
+      end
+
+      private
+
       def serialize_current_state
-        Changeset.create :changed_object => self
+        Versioning.create_changeset_for self
       end
 
     end

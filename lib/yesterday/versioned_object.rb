@@ -1,5 +1,5 @@
 module Yesterday
-  class HistoricalItem < Struct.new(:attributes)
+  class VersionedObject < Struct.new(:attributes)
 
     def id
       attributes['id']
@@ -14,4 +14,5 @@ module Yesterday
     end
 
   end
+
 end

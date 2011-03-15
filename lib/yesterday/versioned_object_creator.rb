@@ -1,5 +1,5 @@
 module Yesterday
-  class HashToObject < Struct.new(:hash)
+  class VersionedObjectCreator < Struct.new(:hash)
 
     def to_object
       @object ||= deserialize(hash)
@@ -18,11 +18,11 @@ module Yesterday
           end
 
         elsif attribute != 'id'
-          attributes[attribute] = value.is_a?(Array) ? Yesterday::HistoricalValue.new(value) : value
+          attributes[attribute] = value.is_a?(Array) ? Yesterday::VersionedAttribute.new(value) : value
         end
       end
 
-      Yesterday::HistoricalItem.new(attributes.merge({ 'id' => hash['id']}))
+      Yesterday::VersionedObject.new(attributes.merge({ 'id' => hash['id']}))
     end
 
     def nested_value?(value)

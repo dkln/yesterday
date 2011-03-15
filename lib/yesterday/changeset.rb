@@ -23,7 +23,7 @@ module Yesterday
     end
 
     def object
-      HashToObject.new(object_attributes).to_object if object_attributes.present?
+      @object ||= VersionedObjectCreator.new(object_attributes).to_object if object_attributes.present?
     end
 
     private
