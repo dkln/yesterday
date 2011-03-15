@@ -142,40 +142,53 @@ describe Yesterday::Model do
       diff.created_addresses.last.id.should ==  address2.id
     end
 
-    it 'should detect that associations are destroyed' do
-      contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
+    describe 'association removal' do
+      before do
+        @contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
 
-      address1 = Address.create(
-        :street => 'street',
-        :house_number => 1,
-        :zipcode => '1234AA',
-        :city => 'Armadillo',
-        :country => 'FooCountry'
-      )
+        @address1 = Address.create(
+          :street => 'street',
+          :house_number => 1,
+          :zipcode => '1234AA',
+          :city => 'Armadillo',
+          :country => 'FooCountry'
+        )
 
-      address2 = Address.create(
-        :street => 'lane',
-        :house_number => 1337,
-        :zipcode => '2211AB',
-        :city => 'Cougar town',
-        :country => 'BarCountry'
-      )
+        @address2 = Address.create(
+          :street => 'lane',
+          :house_number => 1337,
+          :zipcode => '2211AB',
+          :city => 'Cougar town',
+          :country => 'BarCountry'
+        )
 
-      contact.addresses = [address1, address2]
-      contact.save!
+        @contact.addresses = [@address1, @address2]
+        @contact.save!
 
-      contact.addresses = [address1]
-      address2.destroy
+        @contact.addresses = [@address1]
+        @address2.destroy
 
-      contact.save!
+        @contact.save!
 
-      contact.version_number.should == 3
+        @contact.version_number.should == 3
+      end
 
-      diff = contact.diff_version(2, 3)
-      diff.destroyed_addresses.count.should == 1
+      it 'should detect that associations are destroyed when diffing version 2 with 3' do
 
-      diff.destroyed_addresses.first.id.should == address2.id
-      diff.addresses.first.id.should == address1.id
+        diff = @contact.diff_version(2, 3)
+        diff.addresses.count.should == 1
+        diff.destroyed_addresses.count.should == 1
+
+        diff.destroyed_addresses.first.id.should == @address2.id
+        diff.addresses.first.id.should == @address1.id
+      end
+
+      it 'should detect that associations are created when diffing version 1 with 3' do
+        diff = @contact.diff_version(1, 3)
+        diff.should_not respond_to(:addresses)
+        diff.created_addresses.count.should == 1
+        diff.created_addresses.first.id.should == @address1.id
+      end
     end
   end
 
