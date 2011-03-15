@@ -1,4 +1,4 @@
-require 'yesterday/differ'
+require 'yesterday'
 
 describe Yesterday::Differ do
   it 'should detect changes' do

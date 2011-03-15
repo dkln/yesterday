@@ -27,10 +27,6 @@ module Yesterday
       hash
     end
 
-    def path
-      @path ||= []
-    end
-
     def assocation_has_collection?(association)
       [:has_many, :has_and_belongs_to_many].include? association.macro
     end
@@ -55,6 +51,10 @@ module Yesterday
 
     def visited_objects
       @visited_objects ||= []
+    end
+
+    def path
+      @path ||= []
     end
 
   end

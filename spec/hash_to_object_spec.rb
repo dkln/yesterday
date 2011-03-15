@@ -1,6 +1,6 @@
-require 'yesterday/deserializer'
+require 'yesterday'
 
-describe Yesterday::Deserializer do
+describe Yesterday::HashToObject do
   it 'should deserialize a hash into a structured set of historical item classes' do
     from = {
       'id' => 1,
@@ -19,7 +19,7 @@ describe Yesterday::Deserializer do
       ]
     }
 
-    object = Yesterday::Deserializer.new(from).to_object
+    object = Yesterday::HashToObject.new(from).to_object
 
     require 'pp'
 

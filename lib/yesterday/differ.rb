@@ -9,9 +9,11 @@ module Yesterday
 
     def diff_object(from, to)
       diff = diff_attributes(from, to)
-      diff.merge!(diff_collection(from, to))
-      diff.merge!(diff_created_objects(from, to))
-      diff.merge!(diff_destroyed_objects(from, to))
+
+      diff.merge! diff_collection(from, to)
+      diff.merge! diff_created_objects(from, to)
+      diff.merge! diff_destroyed_objects(from, to)
+
       diff
     end
 

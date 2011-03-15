@@ -11,11 +11,11 @@ module Yesterday
     end
 
     def to_s
-      current
+      current.to_s
     end
 
     def to_i
-      current
+      current.to_i
     end
 
   end

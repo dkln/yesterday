@@ -1,20 +1,17 @@
-require 'yesterday/historical_item'
-require 'yesterday/historical_value'
-
 module Yesterday
-  class Deserializer < Struct.new(:diff)
+  class HashToObject < Struct.new(:hash)
 
     def to_object
-      @object ||= deserialize(diff)
+      @object ||= deserialize(hash)
     end
 
     private
 
-    def deserialize(diff)
+    def deserialize(hash)
       attributes = {}
 
-      diff.each do |attribute, value|
-        if value.is_a?(Array) && value.first.is_a?(Hash)
+      hash.each do |attribute, value|
+        if nested_value? value
           value.each do |item|
             attributes[attribute] ||= []
             attributes[attribute] << deserialize(item)
@@ -25,7 +22,11 @@ module Yesterday
         end
       end
 
-      Yesterday::HistoricalItem.new(attributes.merge({ 'id' => diff['id']}))
+      Yesterday::HistoricalItem.new(attributes.merge({ 'id' => hash['id']}))
+    end
+
+    def nested_value?(value)
+      value.is_a?(Array) && value.first.is_a?(Hash)
     end
 
   end
