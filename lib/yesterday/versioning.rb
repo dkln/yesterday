@@ -13,16 +13,28 @@ module Yesterday
         changesets_for(object).last.try(:version_number) || 0
       end
 
-      def historical_data_for(version_number, object)
-        Changeset.for_changed_object(object).version(version_number).first.try(:object)
+      def versioned_object_for(version_number, object)
+        changeset_for(version_number, object).try(:object)
       end
 
-      def find_diff_version_for(from_version_number, to_version_number, object)
-        from_version = find_version_for(from_version_number, object)
-        to_version   = find_version_for(to_version_number, object)
+      def diff_for(from_version_number, to_version_number, object)
+        from_attributes = object_attributes_for(from_version_number, object)
+        to_attributes   = object_attributes_for(to_version_number, object)
+        diff            = Differ.new(from_attributes, to_attributes).diff
 
-
+        VersionedObjectCreator.new(diff).to_object
       end
+
+      private
+
+      def changeset_for(version_number, object)
+        Changeset.for_changed_object(object).version(version_number).first
+      end
+
+      def object_attributes_for(version_number, object)
+        changeset_for(version_number, object).object_attributes
+      end
+
     end
   end
 end

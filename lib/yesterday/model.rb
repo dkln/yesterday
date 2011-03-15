@@ -55,7 +55,7 @@ module Yesterday
 
       def version(version_number)
         if object = first
-          Versioning.historical_data_for(version_number, object)
+          Versioning.versioned_object_for(version_number, object)
         end
       end
 
@@ -81,7 +81,7 @@ module Yesterday
       end
 
       def version(version_number)
-        Versioning.historical_data_for(version_number, self)
+        Versioning.versioned_object_for(version_number, self)
       end
 
       def diff_version(from_version_number, to_version_number)

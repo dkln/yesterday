@@ -80,4 +80,20 @@ describe Yesterday::Model do
     end
   end
 
+  describe 'diffing two versions' do
+    it 'should diff version 1 with version 2' do
+      contact = Contact.create(:first_name => 'foo', :last_name => 'bar')
+      contact.update_attributes :first_name => 'john', :last_name => 'do'
+
+      diff = contact.diff_version(1, 2)
+      diff.should be_a(Yesterday::VersionedObject)
+
+      diff.first_name.current.should == 'john'
+      diff.first_name.previous.should == 'foo'
+
+      diff.last_name.current.should == 'do'
+      diff.last_name.previous.should == 'bar'
+    end
+  end
+
 end
