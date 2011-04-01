@@ -24,6 +24,7 @@ describe Yesterday::Serializer do
     contact.addresses << address2
 
     Yesterday::Serializer.new(contact).to_hash.should == {
+      'report_id' => nil,
       'id' => contact.id,
       'first_name' => 'foo',
       'middle_name' => nil,
@@ -60,7 +61,8 @@ describe Yesterday::Serializer do
 
     Yesterday::Serializer.new(company).to_hash.should == {
       'id' => company.id,
-      'name' => 'foobar'
+      'name' => 'foobar',
+      'report_id' => nil
     }
   end
 end

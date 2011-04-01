@@ -14,7 +14,7 @@ module Yesterday
       each_association_collection(object) do |association, association_name, item|
         path << object
 
-        if assocation_has_collection?(association)
+        if association_has_collection?(association)
           hash[association_name] ||= []
           hash[association_name] << hash_object(item)
         else
@@ -27,7 +27,7 @@ module Yesterday
       hash
     end
 
-    def assocation_has_collection?(association)
+    def association_has_collection?(association)
       [:has_many, :has_and_belongs_to_many].include? association.macro
     end
 
