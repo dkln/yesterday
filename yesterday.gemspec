@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Diederick Lawson"]
   s.email       = ["webmaster@altovista.nl"]
-  s.homepage    = ""
+  s.homepage    = "http://www.altovista.nl"
   s.summary     = "Track history in your active record models"
   s.description = "Track history and view any made changes in your active record models"
 
