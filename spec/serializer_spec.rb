@@ -6,7 +6,7 @@ describe Yesterday::Serializer do
 
     address1 = Address.create(
       :street => 'street',
-      :house_number => 1,
+      :house_number => '1',
       :zipcode => '1234AA',
       :city => 'Armadillo',
       :country => 'FooCountry'
@@ -14,7 +14,7 @@ describe Yesterday::Serializer do
 
     address2 = Address.create(
       :street => 'lane',
-      :house_number => 1337,
+      :house_number => '1337',
       :zipcode => '2211AB',
       :city => 'Cougar town',
       :country => 'BarCountry'
@@ -35,7 +35,7 @@ describe Yesterday::Serializer do
         {
           'id' => address1.id,
           'street' => 'street',
-          'house_number' => 1,
+          'house_number' => '1',
           'zipcode' => '1234AA',
           'city' => 'Armadillo',
           'country' => 'FooCountry',
@@ -45,7 +45,7 @@ describe Yesterday::Serializer do
         {
           'id' => address2.id,
           'street' => 'lane',
-          'house_number' => 1337,
+          'house_number' => '1337',
           'zipcode' => '2211AB',
           'city' => 'Cougar town',
           'country' => 'BarCountry',
