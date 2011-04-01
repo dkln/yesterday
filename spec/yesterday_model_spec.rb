@@ -149,12 +149,11 @@ describe Yesterday::Model do
       diff = report.diff_version(1, 2)
 
       diff.contacts.count.should == 1
-      diff.contacts.first.addresses.count.should == 1
-      diff.contacts.first.addresses.first.id.should == address1.id
 
-      diff.contacts.first.created_addresses.count.should == 2
-      diff.contacts.first.created_addresses.first.id.should == address2.id
-      diff.contacts.first.created_addresses.last.id.should ==  address3.id
+      diff.contacts.first.addresses.count.should == 3
+
+      diff.contacts.first.addresses.select(&:unmodified?).map(&:id).should == [address1.id]
+      diff.contacts.first.addresses.select(&:created?).map(&:id).should == [address2.id, address3.id]
     end
 
     describe 'association removal' do
@@ -215,23 +214,19 @@ describe Yesterday::Model do
         diff = @report.diff_version(2, 3)
         diff.contacts.count.should == 1
 
-        diff.contacts.first.addresses.count.should == 1
-        diff.contacts.first.destroyed_addresses.count.should == 1
+        diff.contacts.first.addresses.count.should == 2
+        diff.contacts.first.addresses.select(&:unmodified?).count.should == 1
+        diff.contacts.first.addresses.select(&:destroyed?).count.should == 1
 
-        diff.contacts.first.destroyed_addresses.first.id.should == @address2.id
-        diff.contacts.first.addresses.first.id.should == @address1.id
-
-        diff.companies.first.created_addresses.count.should == 1
+        diff.contacts.first.addresses.select(&:unmodified?).map(&:id).should == [@address1.id]
+        diff.contacts.first.addresses.select(&:destroyed?).map(&:id).should == [@address2.id]
       end
 
       it 'should detect that associations are created when diffing version 1 with 3' do
         diff = @report.diff_version(1, 3)
         diff.contacts.first.should_not respond_to(:addresses)
 
-        diff.contacts.first.created_addresses.count.should == 1
-        diff.contacts.first.created_addresses.first.id.should == @address1.id
-
-        diff.companies.first.created_addresses.count.should == 1
+        diff.contacts.first.addresses.select(&:created?).map(&:id).should == [@address1.id]
       end
     end
   end

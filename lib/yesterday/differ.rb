@@ -11,8 +11,9 @@ module Yesterday
       diff = diff_attributes(from, to)
 
       diff.merge! diff_collection(from, to)
-      diff.merge! diff_created_objects(from, to)
-      diff.merge! diff_destroyed_objects(from, to)
+
+      diff_created_objects from, to, diff
+      diff_destroyed_objects from, to, diff
 
       diff
     end
@@ -23,9 +24,12 @@ module Yesterday
       from.each do |attribute, old_value|
         if attribute == 'id'
           diff[attribute] = old_value
-        elsif !old_value.is_a?(Array)
+
+        elsif !old_value.is_a?(Array) && attribute != '_event'
           new_value = to[attribute]
           diff[attribute] = [old_value, new_value]
+          diff['_event'] = 'modified' if old_value != new_value
+
         end
       end
 
@@ -53,17 +57,15 @@ module Yesterday
       diff
     end
 
-    def diff_created_objects(from, to)
-      diff_object_creation from, to, 'created'
+    def diff_created_objects(from, to, diff)
+      diff_object_creation from, to, 'created', diff
     end
 
-    def diff_destroyed_objects(from, to)
-      diff_object_creation to, from, 'destroyed'
+    def diff_destroyed_objects(from, to, diff)
+      diff_object_creation to, from, 'destroyed', diff
     end
 
-    def diff_object_creation(from, to, event)
-      diff = {}
-
+    def diff_object_creation(from, to, event, diff)
       to.each do |attribute, to_objects|
         if to_objects.is_a? Array
           from_objects = from[attribute] || []
@@ -72,8 +74,9 @@ module Yesterday
             from_object = find_object(from_objects, to_object['id'])
 
             unless from_object
-              diff["#{event}_#{attribute}"] ||= []
-              diff["#{event}_#{attribute}"] << to_object
+              to_object['_event'] = event
+              diff[attribute] ||= []
+              diff[attribute] << to_object
             end
           end
         end

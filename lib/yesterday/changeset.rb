@@ -26,6 +26,22 @@ module Yesterday
       @object ||= VersionedObjectCreator.new(object_attributes).to_object if object_attributes.present?
     end
 
+    def made_changes
+      @made_changes ||= {}
+
+      unless @made_changes[compare_with_version_number]
+        compare_with_version_number ||= version_number > 1 ? (version_number - 1) : 1
+
+        from_attributes   = changeset_for(compare_with_version_number, changed_object).object_attributes
+        to_attributes     = object_attributes
+        diff              = Differ.new(from_attributes, to_attributes).diff
+
+        @made_changes[compare_with_version_number] = VersionedObjectCreator.new(diff).to_object
+      end
+
+      @made_changes[compare_with_version_number]
+    end
+
     private
 
     def determine_version_number

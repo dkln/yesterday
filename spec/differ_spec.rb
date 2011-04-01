@@ -45,12 +45,16 @@ describe Yesterday::Differ do
           'name' => ['Harold', 'Peter'],
           'addresses' => [
             { 'id' => 1,
-              'address' => ['Sesamstreet 1', 'Foobar 1'] },
+              'address' => ['Sesamstreet 1', 'Foobar 1'],
+              '_event' => 'modified' },
             { 'id' => 2,
-              'address' => ['Sesamstreet 2', 'Foobar 2'] }
-           ]
+              'address' => ['Sesamstreet 2', 'Foobar 2'],
+              '_event' => 'modified' }
+           ],
+          '_event' => 'modified'
         }
-      ]
+      ],
+      '_event' => 'modified'
     }
   end
 
@@ -106,15 +110,12 @@ describe Yesterday::Differ do
           'name' => ['Harold', 'Harold'],
           'addresses' => [
             { 'id' => 2,
-              'address' => ['Sesamstreet 2', 'Sesamstreet 2'] }
-           ],
-           'destroyed_addresses' => [
-              { 'id' => 1,
-                'address' => 'Sesamstreet 1' }
+              'address' => ['Sesamstreet 2', 'Sesamstreet 2'] },
+            { 'id' => 1,
+              'address' => 'Sesamstreet 1',
+              '_event' => 'destroyed' }
            ]
-        }
-      ],
-      'destroyed_contacts' => [
+        },
         {
           'id' => 2,
           'name' => 'Peter',
@@ -123,7 +124,8 @@ describe Yesterday::Differ do
               'address' => 'Sesamstreet 1' },
             { 'id' => 2,
               'address' => 'Sesamstreet 2' }
-           ]
+           ],
+          '_event' => 'destroyed'
         }
       ]
     }
@@ -141,6 +143,18 @@ describe Yesterday::Differ do
             { 'id' => 2,
               'address' => 'Sesamstreet 2' }
            ]
+        }
+      ],
+      'companies' => [
+        {
+          'id' => 1,
+          'name' => 'Some company',
+          'contacts' => [
+            {
+              'id' => 1,
+              'name' => 'Some contact'
+            }
+          ]
         }
       ]
     }
@@ -169,6 +183,22 @@ describe Yesterday::Differ do
               'address' => 'Sesamstreet 2' }
            ]
         }
+      ],
+      'companies' => [
+        {
+          'id' => 1,
+          'name' => 'Some company',
+          'contacts' => [
+            {
+              'id' => 1,
+              'name' => 'Some contact'
+            },
+            {
+              'id' => 2,
+              'name' => 'Some other contact'
+            }
+          ]
+        }
       ]
     }
 
@@ -181,15 +211,12 @@ describe Yesterday::Differ do
           'name' => ['Harold', 'Harold'],
           'addresses' => [
             { 'id' => 2,
-              'address' => ['Sesamstreet 2', 'Sesamstreet 2'] }
-           ],
-           'created_addresses' => [
-              { 'id' => 1,
-                'address' => 'Sesamstreet 1' }
+              'address' => ['Sesamstreet 2', 'Sesamstreet 2'] },
+            { 'id' => 1,
+              'address' => 'Sesamstreet 1',
+              '_event' => 'created' }
            ]
-        }
-      ],
-      'created_contacts' => [
+        },
         {
           'id' => 2,
           'name' => 'Peter',
@@ -198,7 +225,25 @@ describe Yesterday::Differ do
               'address' => 'Sesamstreet 1' },
             { 'id' => 2,
               'address' => 'Sesamstreet 2' }
-           ]
+           ],
+          '_event' => 'created'
+        }
+      ],
+      'companies' => [
+        {
+          'id' => 1,
+          'name' => ['Some company', 'Some company'],
+          'contacts' => [
+            {
+              'id' => 1,
+              'name' => ['Some contact', 'Some contact']
+            },
+            {
+              'id' => 2,
+              'name' => 'Some other contact',
+              '_event' => 'created'
+            }
+          ]
         }
       ]
     }
