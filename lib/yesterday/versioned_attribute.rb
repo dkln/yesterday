@@ -9,6 +9,10 @@ module Yesterday
       diff.first
     end
 
+    def modified?
+      current != previous
+    end
+
     def to_s
       current.to_s
     end

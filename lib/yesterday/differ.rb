@@ -7,6 +7,10 @@ module Yesterday
 
     private
 
+    def ignored_attributes
+      %w(updated_at created_at id _event)
+    end
+
     def diff_object(from, to)
       diff = diff_attributes(from, to)
 
@@ -25,7 +29,7 @@ module Yesterday
         if attribute == 'id'
           diff[attribute] = old_value
 
-        elsif !old_value.is_a?(Array) && attribute != '_event'
+        elsif !old_value.is_a?(Array) && !ignored_attributes.include?(attribute)
           new_value = to[attribute]
           diff[attribute] = [old_value, new_value]
           diff['_event'] = 'modified' if old_value != new_value
@@ -44,7 +48,7 @@ module Yesterday
           new_objects = to[attribute]
 
           old_objects.each do |old_object|
-            new_object = find_object(new_objects, old_object['id'])
+            new_object = find_object(new_objects, old_object['id']) if new_objects
 
             if new_object
               diff[attribute] ||= []

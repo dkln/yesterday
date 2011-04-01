@@ -5,12 +5,8 @@ module Yesterday
       attributes['id']
     end
 
-    def method_missing(method, *arguments, &block)
-      if attributes.has_key?(method.to_s)
-        attributes[method.to_s]
-      else
-        super
-      end
+    def event
+      attributes['_event'] || 'unmodified'
     end
 
     def modified?
@@ -25,8 +21,20 @@ module Yesterday
       attributes['_event'] && attributes['_event'] == 'destroyed'
     end
 
+    def touched?
+      modified? || created? || destroyed?
+    end
+
     def unmodified?
       !attributes.has_key?('_event')
+    end
+
+    def method_missing(method, *arguments, &block)
+      if attributes.has_key?(method.to_s)
+        attributes[method.to_s]
+      else
+        super
+      end
     end
 
   end

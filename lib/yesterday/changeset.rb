@@ -27,19 +27,17 @@ module Yesterday
     end
 
     def made_changes
-      @made_changes ||= {}
+      unless @made_changes
+        compare_version_number ||= version_number > 1 ? (version_number - 1) : 1
 
-      unless @made_changes[compare_with_version_number]
-        compare_with_version_number ||= version_number > 1 ? (version_number - 1) : 1
-
-        from_attributes   = changeset_for(compare_with_version_number, changed_object).object_attributes
+        from_attributes   = Versioning.changeset_for(compare_version_number, changed_object).object_attributes
         to_attributes     = object_attributes
         diff              = Differ.new(from_attributes, to_attributes).diff
 
-        @made_changes[compare_with_version_number] = VersionedObjectCreator.new(diff).to_object
+        @made_changes = VersionedObjectCreator.new(diff).to_object
       end
 
-      @made_changes[compare_with_version_number]
+      @made_changes
     end
 
     private

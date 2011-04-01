@@ -25,8 +25,6 @@ module Yesterday
         VersionedObjectCreator.new(diff).to_object
       end
 
-      private
-
       def changeset_for(version_number, object)
         Changeset.for_changed_object(object).version(version_number).first
       end

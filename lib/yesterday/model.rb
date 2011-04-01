@@ -94,6 +94,7 @@ module Yesterday
       private
 
       def serialize_current_state
+        reload
         Versioning.create_changeset_for self
         invalidate_cached_versioning
       end
