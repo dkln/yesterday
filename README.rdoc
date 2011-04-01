@@ -19,7 +19,7 @@ And then run the generator in your Rails 3 project:
 
   class Contact < ActiveRecord::Base
     has_many :addresses
-    tracks_changes
+    track_changes
   end
 
   class Address < ActiveRecord::Base

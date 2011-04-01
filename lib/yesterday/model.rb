@@ -46,7 +46,7 @@ module Yesterday
         @tracked_attributes || []
       end
 
-      def tracks_changes(options = {})
+      def track_changes(options = {})
         send :include, InstanceMethods
 
         after_save :serialize_current_state
@@ -55,13 +55,13 @@ module Yesterday
 
       def version(version_number)
         if object = first
-          Versioning.versioned_object_for(version_number, object)
+          Versioning.versioned_object_for version_number, object
         end
       end
 
       def diff_version(from_version_number, to_version_number)
         if object = first
-          Versioning.diff_for(from_version_number, to_version_number, object)
+          Versioning.diff_for from_version_number, to_version_number, object
         end
       end
 
@@ -69,11 +69,11 @@ module Yesterday
 
     module InstanceMethods
       def changesets
-        Versioning.changesets_for(self)
+        Versioning.changesets_for self
       end
 
       def version_number
-        Versioning.current_version_number_for(self)
+        Versioning.current_version_number_for self
       end
 
       def previous_version_number
@@ -81,11 +81,11 @@ module Yesterday
       end
 
       def version(version_number)
-        Versioning.versioned_object_for(version_number, self)
+        Versioning.versioned_object_for version_number, self
       end
 
       def diff_version(from_version_number, to_version_number)
-        Versioning.diff_for(from_version_number, to_version_number, self)
+        Versioning.diff_for from_version_number, to_version_number, self
       end
 
       private
