@@ -69,29 +69,41 @@ module Yesterday
 
     module InstanceMethods
       def changesets
-        Versioning.changesets_for self
+        @changesets ||= Versioning.changesets_for(self)
       end
 
       def version_number
-        Versioning.current_version_number_for self
+        @version_number ||= Versioning.current_version_number_for(self)
       end
 
       def previous_version_number
-        version_number > 1 ? version_number - 1 : version_number
+        @previous_version_number ||= (version_number > 1 ? version_number - 1 : version_number)
       end
 
       def version(version_number)
-        Versioning.versioned_object_for version_number, self
+        @version ||= {}
+        @version[version_number] ||= Versioning.versioned_object_for(version_number, self)
       end
 
       def diff_version(from_version_number, to_version_number)
-        Versioning.diff_for from_version_number, to_version_number, self
+        @diff_version ||= {}
+        @diff_version[from_version_number] ||= {}
+        @diff_version[from_version_number][to_version_number] ||= Versioning.diff_for(from_version_number, to_version_number, self)
       end
 
       private
 
       def serialize_current_state
         Versioning.create_changeset_for self
+        invalidate_cached_versioning
+      end
+
+      def invalidate_cached_versioning
+        cached_versioned_items.each { |item| instance_variable_set(:"@#{item}", nil) }
+      end
+
+      def cached_versioned_items
+        %w(changesets version_number previous_version_number version diff_version)
       end
 
     end
