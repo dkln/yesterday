@@ -16,7 +16,12 @@ describe Yesterday::VersionedObjectCreator do
               'address' => ['Sesamstreet 2', 'Sesamstreet 2'] }
            ]
         }
-      ]
+      ],
+      'state' => {
+        'id' => 1,
+        'code' => ['C00', 'C12'],
+        'description' => ['Critical', 'Non critical']
+      }
     }
 
     object = Yesterday::VersionedObjectCreator.new(from).to_object
@@ -37,5 +42,11 @@ describe Yesterday::VersionedObjectCreator do
     object.contacts.first.addresses.first.address.current.should == 'Sesamstreet 1'
     object.contacts.first.addresses.last.address.previous.should == 'Sesamstreet 2'
     object.contacts.first.addresses.last.address.current.should == 'Sesamstreet 2'
+
+    object.state.id.should == 1
+    object.state.code.current.should == 'C12'
+    object.state.code.previous.should == 'C00'
+    object.state.description.current.should == 'Non critical'
+    object.state.description.previous.should == 'Critical'
   end
 end

@@ -29,6 +29,9 @@ module Yesterday
         if attribute == 'id'
           diff[attribute] = old_value
 
+        elsif old_value.is_a?(Hash)
+          diff[attribute] = diff_attributes(old_value, to[attribute] || {})
+
         elsif !old_value.is_a?(Array) && !ignored_attributes.include?(attribute)
           new_value = to[attribute]
           diff[attribute] = [old_value, new_value]

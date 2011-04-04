@@ -16,7 +16,12 @@ describe Yesterday::Differ do
               'address' => 'Sesamstreet 2' }
            ]
         }
-      ]
+      ],
+      'state' => {
+        'id' => 1,
+        'code' => 'C00',
+        'description' => 'Critical'
+      }
     }
 
     to = {
@@ -33,7 +38,12 @@ describe Yesterday::Differ do
               'address' => 'Foobar 2' }
           ]
         }
-      ]
+      ],
+      'state' => {
+        'id' => 1,
+        'code' => 'C12',
+        'description' => 'Non critical'
+      }
     }
 
     Yesterday::Differ.new(from, to).diff.should == {
@@ -54,6 +64,12 @@ describe Yesterday::Differ do
           '_event' => 'modified'
         }
       ],
+      'state' => {
+        'id' => 1,
+        'code' => ['C00', 'C12'],
+        'description' => ['Critical', 'Non critical'],
+        '_event' => 'modified'
+      },
       '_event' => 'modified'
     }
   end
