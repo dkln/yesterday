@@ -2,9 +2,6 @@
 
 The Yesterday gem lets you track changes made in ActiveRecord models. It's also possible to diff different versions. The big difference with this gem and others is, is that it is possible to diff all child objects (has_many, belongs_to & has_and_belongs_to_many) and it's changes.
 
-== Note: work in progress
-
-In the meanwhile:
 http://www.youtube.com/watch?v=YgtByWlBSdA
 
 == Installation
