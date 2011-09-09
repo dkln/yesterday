@@ -1,3 +1,3 @@
 module Yesterday
-  VERSION = "0.6"
+  VERSION = "1.0.rc1"
 end
