@@ -46,11 +46,21 @@ module Yesterday
         @tracked_attributes || []
       end
 
-      def track_changes(options = {})
-        send :include, InstanceMethods
+      def changeset_model
+        @changeset_model
+      end
 
+      def changeset_klass
+        changeset_model.classify.constantize
+      end
+
+      def track_changes(options = {})
+        with = options[:with] || :changeset
+        @changeset_model = with.to_s
+
+        send :include, InstanceMethods
         after_save :serialize_current_state
-        exclude_tracking_for :associations => :changesets
+        exclude_tracking_for :associations => with.to_s.pluralize.to_sym
       end
 
       def version(version_number)

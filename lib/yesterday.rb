@@ -2,7 +2,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'active_record'
 
-require 'yesterday/changeset'
+require 'yesterday/changeset_base'
 require 'yesterday/versioning'
 require 'yesterday/differ'
 require 'yesterday/versioned_object_creator'

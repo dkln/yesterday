@@ -10,9 +10,9 @@ describe Yesterday::Model do
   end
 
   it 'should create a new changeset when saved' do
-    Yesterday::Changeset.count.should == 0
+    Changeset.count.should == 0
     Report.create :description => 'bar'
-    Yesterday::Changeset.count.should == 1
+    Changeset.count.should == 1
   end
 
   it 'should return all related changesets' do

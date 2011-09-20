@@ -14,9 +14,13 @@ And then run the generator in your Rails 3 project:
 
 == Use tracking in your models
 
+  class Changeset < ActiveRecord::Base
+    include Yesterday::ChangesetBase
+  end
+
   class Contact < ActiveRecord::Base
     has_many :addresses
-    track_changes
+    track_changes :with => :changesets
   end
 
   class Address < ActiveRecord::Base

@@ -9,7 +9,7 @@ RSpec.configure do |config|
   config.before(:each) do
     Contact.delete_all
     Address.delete_all
-    Yesterday::Changeset.delete_all
+    Changeset.delete_all
   end
 end
 

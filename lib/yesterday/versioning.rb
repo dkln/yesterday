@@ -2,11 +2,11 @@ module Yesterday
   class Versioning
     class << self
       def create_changeset_for(object)
-        Changeset.create :changed_object => object
+        object.class.changeset_klass.create :changed_object => object
       end
 
       def changesets_for(object)
-        Changeset.for_changed_object(object)
+        object.class.changeset_klass.for_changed_object(object)
       end
 
       def current_version_number_for(object)
@@ -26,7 +26,7 @@ module Yesterday
       end
 
       def changeset_for(version_number, object)
-        Changeset.for_changed_object(object).version(version_number).first
+        object.class.changeset_klass.for_changed_object(object).version(version_number).first
       end
 
       def object_attributes_for(version_number, object)

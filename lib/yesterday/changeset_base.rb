@@ -1,25 +1,11 @@
 module Yesterday
-  class Changeset < ActiveRecord::Base
+  module ChangesetBase
 
-    before_create :determine_version_number, :determine_object_attributes
-    belongs_to :changed_object, :polymorphic => true
-
-    serialize :object_attributes
-
-    def self.version(version_number)
-      where(:version_number => version_number)
-    end
-
-    def self.for_changed_object(object)
-      where(:changed_object_type => object.class.to_s, :changed_object_id => object.id)
-    end
-
-    def self.last_for(object)
-      for_changed_object(object).order('created_at DESC').first
-    end
-
-    def self.version_number_for(object)
-      last_for(object).try(:version_number) || 0
+    def self.included(base)
+      base.extend ClassMethods
+      base.before_create :determine_version_number, :determine_object_attributes
+      base.belongs_to :changed_object, :polymorphic => true
+      base.serialize :object_attributes
     end
 
     def object
@@ -48,6 +34,25 @@ module Yesterday
 
     def determine_object_attributes
       self.object_attributes = Yesterday::Serializer.new(changed_object).to_hash
+    end
+
+
+    module ClassMethods
+      def version(version_number)
+        where(:version_number => version_number)
+      end
+
+      def for_changed_object(object)
+        where(:changed_object_type => object.class.to_s, :changed_object_id => object.id)
+      end
+
+      def last_for(object)
+        for_changed_object(object).order('created_at DESC').first
+      end
+
+      def version_number_for(object)
+        last_for(object).try(:version_number) || 0
+      end
     end
 
   end

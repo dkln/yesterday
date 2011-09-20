@@ -8,6 +8,9 @@ class CreateChangesets < ActiveRecord::Migration
       t.datetime :created_at
       t.datetime :updated_at
     end
+
+    create_index :changesets, [ :changed_object_id, :changed_object_type ]
+    create_index :changesets, [ :changed_object_id, :changed_object_type, :version_number ]
   end
 
   def self.down
